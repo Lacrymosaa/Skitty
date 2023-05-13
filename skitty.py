@@ -29,7 +29,7 @@ class CalculatorWindow(QMainWindow):
         self.display = QLineEdit()
         self.display.setFixedHeight(60)
         self.display.setAlignment(Qt.AlignRight)
-        self.display.setReadOnly(True)  # Definir como somente leitura
+        self.display.setReadOnly(True)  # Definir como somente leitura para evitar a digitação direta
         # Folha de estilo CSS para o QLineEdit do display
         display_style = '''
             QLineEdit {
@@ -45,7 +45,7 @@ class CalculatorWindow(QMainWindow):
         button_layout = QGridLayout()
         main_layout.addLayout(button_layout)
         
-        # Lista de botões e seus textos correspondentes
+        # Lista de botões e seus textos correspondentes tendo O que mostra/Imagem que recebe/Classe que pertence
         buttons = [
             ('%', 'imgs/percent.png', 'percent'),
             ('CE', 'imgs/CE.png', 'CE'),
@@ -58,22 +58,22 @@ class CalculatorWindow(QMainWindow):
             ('7', 'imgs/number.png', 'kitty'),
             ('8', 'imgs/number.png', 'kitty'),
             ('9', 'imgs/number.png', 'kitty'),
-            ('*', 'imgs/multiply.png', 'multiply'),
+            ('*', 'imgs/multiply.png', 'white'),
             ('4', 'imgs/number.png', 'kitty'),
             ('5', 'imgs/number.png', 'kitty'),
             ('6', 'imgs/number.png', 'kitty'),
-            ('-', 'imgs/multiply.png', 'minus'),
+            ('-', 'imgs/multiply.png', 'white'),
             ('1', 'imgs/number.png', 'kitty'),
             ('2', 'imgs/number.png', 'kitty'),
             ('3', 'imgs/number.png', 'kitty'),
-            ('+', 'imgs/multiply.png', 'plus'),
-            ('±', 'imgs/multiply.png', 'negate'),
+            ('+', 'imgs/multiply.png', 'white'),
+            ('±', 'imgs/multiply.png', 'white'),
             ('0', 'imgs/number.png', 'kitty'),
-            ('.', 'imgs/multiply.png', 'dot'),
-            ('=', 'imgs/multiply.png', 'equal'),
+            ('.', 'imgs/multiply.png', 'white'),
+            ('=', 'imgs/multiply.png', 'white'),
         ]
 
-        # Folha de estilo CSS
+        # Folha de estilo CSS dos botões
         button_style = '''
             QPushButton {
                 border: 3px groove rgba(0, 0, 0, 0.1);
@@ -119,29 +119,9 @@ class CalculatorWindow(QMainWindow):
                 background-color: #A9BE61;
             }
 
-            QPushButton.multiply {
+            QPushButton.white {
                 background-color: #FFFFFF;
             }
-
-            QPushButton.minus {
-                background-color: #FFFFFF;
-            }
-            
-            QPushButton.plus {
-                background-color: #FFFFFF;
-            } 
-
-            QPushButton.negate {
-                background-color: #FFFFFF;
-            } 
-
-            QPushButton.dot {
-                background-color: #FFFFFF;
-            } 
-
-            QPushButton.equal {
-                background-color: #FFFFFF;
-            } 
 
             QPushButton:hover {
                 border: 3px groove rgba(0, 0, 0, 0.25);
@@ -152,7 +132,7 @@ class CalculatorWindow(QMainWindow):
             }
         '''
         
-        # Adicionar botões ao layout
+        # Adicionar botões ao layout, pegando os valores do array buttons e atrelando aos botões
         row, col = 0, 0
         for btn_text, btn_image, btn_class in buttons:
             button = QPushButton(btn_text)
@@ -178,21 +158,21 @@ class CalculatorWindow(QMainWindow):
         background_label.setMovie(movie)
         background_label.setGeometry(self.rect())  # Definir a geometria do QLabel para cobrir toda a janela
         background_label.lower()  # Colocar o QLabel no fundo para servir como plano de fundo
-
-        # Iniciar a reprodução do QMovie
-        movie.start()
+        
+        movie.start() # Iniciar a reprodução do QMovie
     
+
     def handle_button(self, text):
         current_text = self.display.text()
-        if current_text == '0':
+        if current_text == '0': # Faz com que o valor 0 seja substituido na nova entrada
             self.display.setText(text)
-        elif text == '=':
+        elif text == '=': # Chama função calcular no =
             self.calculate()
-        elif text == 'C':
+        elif text == 'C': # Clean no C
             self.display.clear()
-        elif text == '⌫':
+        elif text == '⌫': # Apaga a última entrada
             self.display.backspace()
-        elif text == '√':
+        elif text == '√': # Coloca sqrt (função de raiz quadrada da lib usada)
             self.display.setText('sqrt(' + self.display.text() + ')')
         elif text == '÷':
             self.display.setText(self.display.text() + '/')
@@ -214,6 +194,7 @@ class CalculatorWindow(QMainWindow):
         else:
             self.display.setText(self.display.text() + text)
 
+    # Função que permite o programa a ser keysensitive. O botão backspace não estava funcionando, então o defini como Z
     def keyPressEvent(self, event):
         key = event.key()
 
@@ -256,6 +237,7 @@ class CalculatorWindow(QMainWindow):
         elif key == Qt.Key_C:
             self.handle_button('C')
 
+    # Função responsavel pelo cálculo
     def calculate(self):
         try:
             expression = self.display.text()
